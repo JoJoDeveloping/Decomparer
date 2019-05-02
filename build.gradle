@@ -1,0 +1,23 @@
+plugins {
+    id 'com.github.johnrengelman.shadow' version '4.0.4'
+    id 'java'
+}
+
+group 'de.jojomodding'
+version '0.1'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile "net.sf.jopt-simple:jopt-simple:6.0-alpha-3"
+}
+
+shadowJar {
+    baseName = 'decomparer'
+    classifier = null
+    version = "0.1"
+}
