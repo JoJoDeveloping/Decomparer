@@ -15,7 +15,7 @@ public class SetDifference<T> {
         rightOnly = new HashSet<>(right);
         rightOnly.removeAll(left);
         both = new HashSet<>(left);
-        both.removeAll(rightOnly);
+        both.removeAll(leftOnly);
     }
 
     public Set<T> getCommon(){

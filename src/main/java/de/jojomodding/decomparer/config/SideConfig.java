@@ -8,7 +8,7 @@ public class SideConfig {
 
     private File decompilerExec = new File("fernflower.jar");
     private List<String> extraArgs = new ArrayList<>();
-    private List<File> sources = new ArrayList<>();
+    private File mainfile = null;
     private String jvm = "java";
     private List<String> jvmArgs = new ArrayList<>();
     private boolean isLeft;
@@ -49,16 +49,12 @@ public class SideConfig {
         this.extraArgs = s;
     }
 
-    public List<File> getSources(){
-        return new ArrayList<>(sources);
+    public File getSource(){
+        return mainfile;
     }
 
-    protected List<File> getRawSources(){
-        return sources;
-    }
-
-    protected void setSources(List<File> s){
-        this.sources = s;
+    protected void setSource(File s){
+        this.mainfile = s;
     }
 
     public List<String> getJavaArgs(){

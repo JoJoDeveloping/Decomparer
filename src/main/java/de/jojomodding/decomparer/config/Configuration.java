@@ -1,22 +1,20 @@
 package de.jojomodding.decomparer.config;
 
+import de.jojomodding.decomparer.Side;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 import joptsimple.OptionSpec;
 
-import javax.swing.text.html.Option;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class Configuration {
     private SideConfig leftSide = new SideConfig(true), rightSide = new SideConfig(false);
     private File tempDir;
-    private boolean parallel;
+    private boolean parallel, skip;
 
     public static Configuration readFromCommandLine(String[] args) throws IOException {
         OptionParser parser = new OptionParser();
@@ -31,6 +29,7 @@ public class Configuration {
         OptionSpec left = parser.acceptsAll(List.of("left", "l"), "Following modifiers affect only the source/left configuration");
         OptionSpec right = parser.acceptsAll(List.of("right", "r"), "Following modifiers affect only the target/right configuration");
         OptionSpec parallel = parser.acceptsAll(List.of("parallel", "p"), "Run both decompilers in parallel");
+        OptionSpec skip = parser.acceptsAll(List.of("skipdecompile"), "Assume decompilation to be already done");
         List<String> latestSubargs = new ArrayList<>(args.length);
         Side side = Side.BOTH, nextside=null;
         Configuration conf = new Configuration();
@@ -56,7 +55,7 @@ public class Configuration {
                 currentSide.allApplicable(conf).forEach(sc -> sc.setDecompilerExecutable(decompiler));
             }else if(s == mainfile){
                 File f = os.valuesOf(mainfile).get(findex++);
-                currentSide.allApplicable(conf).forEach(sc -> sc.getRawSources().add(f));
+                currentSide.allApplicable(conf).forEach(sc -> sc.setSource(f));
             }else if(s == java){
                 String jx = os.valuesOf(java).get(jfindex++);
                 currentSide.allApplicable(conf).forEach(sc -> sc.setJavaVirtualMachineExecutable(jx));
@@ -67,23 +66,25 @@ public class Configuration {
                 conf.tempDir = os.valueOf(tempdir);
             }else if(s == parallel){
                 conf.parallel = true;
+            }else if(s == skip){
+                conf.skip = true;
             }
         }
         if(conf.tempDir == null){
             conf.tempDir = Files.createTempDirectory("decomparer").toFile();
         }else{
-            conf.tempDir = Files.createDirectory(conf.tempDir.toPath()).toFile();
+            conf.tempDir.mkdirs();
         }
         System.out.println("Tempdir: "+conf.tempDir);
         Side.BOTH.allApplicable(conf).forEach(c -> {
             System.out.println("    FF: " + c.getDecompilerExecutable());
             System.out.println("    FF args: "+ String.join(",", c.getExtraArgs()));
-            System.out.println("    sources: "+ c.getSources().stream().map(Object::toString).collect(Collectors.joining(",")));
+            System.out.println("    sources: "+ c.getSource());
             System.out.println("    Java   : "+ c.getJavaVirtualMachineExecutable());
             System.out.println("    JVM Arg: "+ String.join(",", c.getJavaArgs()));
         });
-        if(Side.BOTH.allApplicable(conf).anyMatch(c -> c.getSources().isEmpty())){
-            throw new IOException("You are missing the sources");
+        if(Side.BOTH.allApplicable(conf).anyMatch(c -> c.getSource() == null)){
+            throw new IOException("You are missing the source!");
         }
         return conf;
     }
@@ -105,21 +106,7 @@ public class Configuration {
     }
 
 
-    private enum Side {
-        LEFT, RIGHT, BOTH;
-
-        public Stream<SideConfig> allApplicable(Configuration conf){
-            switch (this){
-                case BOTH:
-                    return Stream.of(conf.leftSide, conf.rightSide);
-                case LEFT:
-                    return Stream.of(conf.leftSide);
-                case RIGHT:
-                    return Stream.of(conf.rightSide);
-            }
-            throw new RuntimeException("Invalid enum value "+this);
-        }
-
+    public boolean skipsDecompilation() {
+        return skip;
     }
-
 }
