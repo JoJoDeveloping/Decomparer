@@ -30,6 +30,8 @@ public class DiffedMapDifference<T,V> {
                     allpatched.put(k, a);
                 } catch (DiffException e) {
                     e.printStackTrace();
+                    unequal.put(k, Map.entry(v, null));
+                    allpatched.put(k, Map.entry(v, null));
                 }
             }
             else allpatched.put(k, Map.entry(v, new Patch<>()));

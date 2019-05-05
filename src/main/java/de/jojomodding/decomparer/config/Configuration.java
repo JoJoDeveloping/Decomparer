@@ -14,6 +14,7 @@ import java.util.List;
 public class Configuration {
     private SideConfig leftSide = new SideConfig(true), rightSide = new SideConfig(false);
     private File tempDir;
+    private String font="Monospaced";
     private boolean parallel, skip;
 
     public static Configuration readFromCommandLine(String[] args) throws IOException {
@@ -30,6 +31,7 @@ public class Configuration {
         OptionSpec right = parser.acceptsAll(List.of("right", "r"), "Following modifiers affect only the target/right configuration");
         OptionSpec parallel = parser.acceptsAll(List.of("parallel", "p"), "Run both decompilers in parallel");
         OptionSpec skip = parser.acceptsAll(List.of("skipdecompile"), "Assume decompilation to be already done");
+        OptionSpec<String> fontname = parser.accepts("font", "The editor font").withRequiredArg().defaultsTo("Monospaced");
         List<String> latestSubargs = new ArrayList<>(args.length);
         Side side = Side.BOTH, nextside=null;
         Configuration conf = new Configuration();
@@ -68,6 +70,8 @@ public class Configuration {
                 conf.parallel = true;
             }else if(s == skip){
                 conf.skip = true;
+            }else if(s == fontname){
+                conf.font = os.valueOf(fontname);
             }
         }
         if(conf.tempDir == null){
@@ -75,14 +79,14 @@ public class Configuration {
         }else{
             conf.tempDir.mkdirs();
         }
-        System.out.println("Tempdir: "+conf.tempDir);
-        Side.BOTH.allApplicable(conf).forEach(c -> {
-            System.out.println("    FF: " + c.getDecompilerExecutable());
-            System.out.println("    FF args: "+ String.join(",", c.getExtraArgs()));
-            System.out.println("    sources: "+ c.getSource());
-            System.out.println("    Java   : "+ c.getJavaVirtualMachineExecutable());
-            System.out.println("    JVM Arg: "+ String.join(",", c.getJavaArgs()));
-        });
+//        System.out.println("Tempdir: "+conf.tempDir);
+//        Side.BOTH.allApplicable(conf).forEach(c -> {
+//            System.out.println("    FF: " + c.getDecompilerExecutable());
+//            System.out.println("    FF args: "+ String.join(",", c.getExtraArgs()));
+//            System.out.println("    sources: "+ c.getSource());
+//            System.out.println("    Java   : "+ c.getJavaVirtualMachineExecutable());
+//            System.out.println("    JVM Arg: "+ String.join(",", c.getJavaArgs()));
+//        });
         if(Side.BOTH.allApplicable(conf).anyMatch(c -> c.getSource() == null)){
             throw new IOException("You are missing the source!");
         }
@@ -105,6 +109,9 @@ public class Configuration {
         return parallel;
     }
 
+    public String getFontName(){
+        return font;
+    }
 
     public boolean skipsDecompilation() {
         return skip;
