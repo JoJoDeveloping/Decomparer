@@ -6,6 +6,7 @@ import de.jojomodding.decomparer.processing.DifferentialFileTree;
 import de.jojomodding.decomparer.processing.Processor;
 
 import javax.swing.*;
+import java.awt.*;
 import java.io.IOException;
 
 public class Decomparer {
@@ -17,6 +18,8 @@ public class Decomparer {
             DifferentialFileTree pr = new Processor(conf).process();
 
             JFrame frame = new JFrame("Decomparer");
+            frame.setPreferredSize(new Dimension(700, 700));
+            frame.setMinimumSize(new Dimension(300, 200));
             frame.setContentPane(new DecomparerWindow(pr, conf).$$$getRootComponent$$$());
             frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
             frame.pack();

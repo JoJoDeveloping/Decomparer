@@ -47,8 +47,8 @@ public class DecomparerWindow {
     private void createUIComponents() {
         filetree = new JTree(new FolderNode(dft, null, new TreePath()));
         filetree.setCellRenderer(new DiffTreeCellRenderer());
-        filetree.setMinimumSize(new Dimension(150, ~1));
-        filetree.setSize(150, filetree.getHeight());
+        filetree.setMinimumSize(new Dimension(100, ~1));
+        filetree.setSize(100, filetree.getHeight());
     }
 
     /**
