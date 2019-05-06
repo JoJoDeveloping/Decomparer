@@ -17,7 +17,7 @@ public class Decomparer {
             DifferentialFileTree pr = new Processor(conf).process();
 
             JFrame frame = new JFrame("Decomparer");
-            frame.setContentPane(new DecomparerWindow(pr, conf).panel);
+            frame.setContentPane(new DecomparerWindow(pr, conf).$$$getRootComponent$$$());
             frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
             frame.pack();
             frame.setVisible(true);

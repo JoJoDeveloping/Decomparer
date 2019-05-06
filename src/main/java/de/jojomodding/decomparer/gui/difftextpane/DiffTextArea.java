@@ -22,7 +22,7 @@ public class DiffTextArea extends JComponent implements ComponentListener {
     private int leftOffset;
 
     private List<ColorizedString> left, right;
-    private int textlenmaxleft, texlenmaxright, textlenmax, xStart;
+    private int textlenmax, xStart;
     private BitSet linesWithChange;
 
     public DiffTextArea(JScrollBar bar, String fontName){
@@ -43,16 +43,16 @@ public class DiffTextArea extends JComponent implements ComponentListener {
         processText(text, patch);
         String mln = Integer.toString(left.size());
         xStart = getFontMetrics(getFont()).stringWidth(mln) + 7;
-        this.textlenmaxleft = left.stream().map(s -> getFontMetrics(getFont()).stringWidth(s.getBase())).max(Integer::compareTo).orElse(0);
-        this.texlenmaxright = right.stream().map(s -> getFontMetrics(getFont()).stringWidth(s.getBase())).max(Integer::compareTo).orElse(0);
-        textlenmax = Math.max(textlenmaxleft, texlenmaxright);
-        bar.setMaximum(textlenmax);
-        bar.setVisibleAmount(getWidth()/2-10);
-        bar.setVisible(getWidth() < texlenmaxright+textlenmaxleft+xStart+18);
+        int textlenmaxleft = left.stream().map(s -> getFontMetrics(getFont()).stringWidth(s.getBase())).max(Integer::compareTo).orElse(0);
+        int textlenmaxright = right.stream().map(s -> getFontMetrics(getFont()).stringWidth(s.getBase())).max(Integer::compareTo).orElse(0);
+        textlenmax = Math.max(textlenmaxleft, textlenmaxright);
         bar.setValue(0);
+        correctSlider();
         setMinimumSize(new Dimension(200, getFontMetrics(getFont()).getHeight()*text.size()+4));
         setPreferredSize(getMinimumSize());
-        setSize(getSize().width, getMinimumSize().height);
+        setSize(getSize().width, getMinimumSize().height); //do this so the parent JScrollPane shows the scroll bar if neccesary
+        if(getParent() != null && getParent().getParent() instanceof JScrollPane)
+            ((JScrollPane) getParent().getParent()).getVerticalScrollBar().setValue(0);
         repaint();
     }
 
@@ -98,10 +98,20 @@ public class DiffTextArea extends JComponent implements ComponentListener {
 
     @Override
     public void componentResized(ComponentEvent componentEvent) {
-        bar.setMaximum(textlenmax);
-        bar.setVisibleAmount(getWidth()/2-10);
-        bar.setVisible(getWidth() < texlenmaxright+textlenmaxleft+xStart+18);
+        correctSlider();
         repaint();
+    }
+
+    private void correctSlider(){
+        int max = textlenmax;
+        int min = 0;
+        int extend = (getWidth()-xStart-18)/2;
+        leftOffset = Math.max(0,Math.min(bar.getValue(), max-extend));
+        bar.setValue(leftOffset);
+        bar.setVisible(extend < max);
+        bar.setMaximum(max);
+        bar.setMinimum(0);
+        bar.setVisibleAmount(extend);
     }
 
     @Override

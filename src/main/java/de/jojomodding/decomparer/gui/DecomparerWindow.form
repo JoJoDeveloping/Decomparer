@@ -21,7 +21,9 @@
         <properties>
           <background color="-12040120"/>
           <continuousLayout value="true"/>
+          <dividerLocation value="150"/>
           <foreground color="-12040120"/>
+          <resizeWeight value="0.3"/>
         </properties>
         <border type="none"/>
         <children>
@@ -56,11 +58,13 @@
               </component>
             </children>
           </grid>
-          <scrollpane id="b0211">
+          <scrollpane id="b0211" binding="filetreeContainer">
             <constraints>
               <splitpane position="left"/>
             </constraints>
-            <properties/>
+            <properties>
+              <verticalScrollBarPolicy value="20"/>
+            </properties>
             <border type="none"/>
             <children>
               <component id="8de1c" class="javax.swing.JTree" binding="filetree" custom-create="true">

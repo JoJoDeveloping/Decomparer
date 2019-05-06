@@ -1,6 +1,7 @@
 plugins {
     id 'com.github.johnrengelman.shadow' version '4.0.4'
     id 'java'
+    id 'application'
 }
 
 group 'de.jojomodding'
@@ -15,10 +16,15 @@ repositories {
 dependencies {
     compile "net.sf.jopt-simple:jopt-simple:6.0-alpha-3"
     compile 'io.github.java-diff-utils:java-diff-utils:4.0'
+    compile 'com.intellij:forms_rt:7.0.3'
 }
 
 shadowJar {
     baseName = 'decomparer'
     classifier = null
     version = "0.1"
+}
+
+application {
+    mainClassName = 'de.jojomodding.decomparer.Decomparer'
 }
