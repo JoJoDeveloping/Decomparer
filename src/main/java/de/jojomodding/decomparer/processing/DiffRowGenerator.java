@@ -33,6 +33,7 @@ import java.util.function.BiPredicate;
 import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
  * This class for generating DiffRows for side-by-sidy view. You can customize the way of generating. For example, show
@@ -266,8 +267,8 @@ public class DiffRowGenerator {
      * @param delta the given delta
      */
     private List<DiffRow> generateInlineDiffs(AbstractDelta<String> delta) throws DiffException {
-        List<String> orig = delta.getSource().getLines();
-        List<String> rev = delta.getTarget().getLines();
+        List<String> orig = delta.getSource().getLines().stream().map(this::preprocessLine).collect(Collectors.toList());
+        List<String> rev = delta.getTarget().getLines().stream().map(this::preprocessLine).collect(Collectors.toList());
         List<String> origList;
         List<String> revList;
         String joinedOrig = String.join("\n", orig);
