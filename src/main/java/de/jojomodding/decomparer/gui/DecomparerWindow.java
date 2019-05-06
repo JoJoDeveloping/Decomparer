@@ -78,6 +78,8 @@ public class DecomparerWindow {
         container.setHorizontalScrollBarPolicy(31);
         container.setVerticalScrollBarPolicy(20);
         panel1.add(container, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, new Dimension(200, -1), null, null, 0, false));
+        final JToolBar.Separator toolBar$Separator1 = new JToolBar.Separator();
+        container.setViewportView(toolBar$Separator1);
         scroller = new JScrollBar();
         scroller.setOrientation(0);
         panel1.add(scroller, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));

@@ -46,12 +46,7 @@
                   <verticalScrollBarPolicy value="20"/>
                 </properties>
                 <border type="none"/>
-                <children>
-                  <component id="b6d4a" class="javax.swing.JToolBar$Separator">
-                    <constraints/>
-                    <properties/>
-                  </component>
-                </children>
+                <children/>
               </scrollpane>
               <component id="1cc7d" class="javax.swing.JScrollBar" binding="scroller">
                 <constraints>

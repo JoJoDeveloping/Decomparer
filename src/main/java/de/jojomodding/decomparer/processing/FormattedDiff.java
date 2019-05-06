@@ -3,7 +3,6 @@ package de.jojomodding.decomparer.processing;
 import com.github.difflib.algorithm.DiffException;
 import com.github.difflib.patch.Patch;
 import com.github.difflib.text.DiffRow;
-import com.github.difflib.text.DiffRowGenerator;
 import de.jojomodding.decomparer.gui.difftextpane.ColorizedString;
 
 import java.awt.*;
@@ -21,7 +20,7 @@ public class FormattedDiff {
         this.right = new ArrayList<>(left.size());
         changedLines = new BitSet();
         if(right != null)try {
-            List<DiffRow> dr = DiffRowGenerator.create().showInlineDiffs(true).oldTag(f -> "\0").newTag(f -> "\0").reportLinesUnchanged(true).build().generateDiffRows(left, right);
+            List<DiffRow> dr = DiffRowGenerator.create().showInlineDiffs(true).oldTag(f -> "\0").newTag(f -> "\0").build().generateDiffRows(left, right);
             for(int line = 0; line < dr.size(); line++){
                 DiffRow r = dr.get(line);
                 String[] leftSubs = r.getOldLine().split("\0", -1);

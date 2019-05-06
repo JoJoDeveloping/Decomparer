@@ -48,7 +48,7 @@ public class DiffTextArea extends JComponent implements ComponentListener {
         textlenmax = Math.max(textlenmaxleft, textlenmaxright);
         bar.setValue(0);
         correctSlider();
-        setMinimumSize(new Dimension(200, getFontMetrics(getFont()).getHeight()*text.size()+4));
+        setMinimumSize(new Dimension(200, getFontMetrics(getFont()).getHeight()*left.size()+4));
         setPreferredSize(getMinimumSize());
         setSize(getSize().width, getMinimumSize().height); //do this so the parent JScrollPane shows the scroll bar if neccesary
         if(getParent() != null && getParent().getParent() instanceof JScrollPane)
