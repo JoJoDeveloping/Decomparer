@@ -9,3 +9,6 @@ The arguments are rather self-explainatory, but here is an example anyway:
 Note that you can also decompile the same file with different decompilers:
 
 `-ld fernflower.jar -rd fernflower-patched.jar -bf test.jar -p`
+
+## Preview
+![alt text](https://raw.githubusercontent.com/JoJoDeveloping/Decomparer/master/preview.png)

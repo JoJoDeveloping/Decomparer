@@ -1,6 +1,7 @@
 package de.jojomodding.decomparer.config;
 
 import de.jojomodding.decomparer.Side;
+import joptsimple.BuiltinHelpFormatter;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 import joptsimple.OptionSpec;
@@ -19,24 +20,28 @@ public class Configuration {
 
     public static Configuration readFromCommandLine(String[] args) throws IOException {
         OptionParser parser = new OptionParser();
-        OptionSpec<File> decomiler = parser.acceptsAll(List.of("decompiler", "ff", "d"), "The decompiler to use, default fernflower.jar").withRequiredArg().ofType(File.class);
-        OptionSpec<String> decargs = parser.acceptsAll(List.of("decompilerargs", "ffargs", "a"), "Arguments passed to the decompiler").withRequiredArg().ofType(String.class);
-        OptionSpec<File> mainfile = parser.acceptsAll(List.of("file", "s", "f"), "The file to be modified").withRequiredArg().ofType(File.class);
-        OptionSpec<File> tempdir = parser.acceptsAll(List.of("tempdir", "t"), "The temporary directory. Always affects both configurations").withRequiredArg().ofType(File.class);
-        OptionSpec<String> java = parser.acceptsAll(List.of("jvm", "j"), "The jvm used to execute the decompiler, default java").withRequiredArg().ofType(String.class);
-        OptionSpec<String> jvmargs = parser.acceptsAll(List.of("jvmarg", "x"), "Args passed to the jvm").withRequiredArg().ofType(String.class);
+        OptionSpec<File> decomiler = parser.acceptsAll(List.of("decompiler", "ff", "d"), "SIDED - The decompiler to use, default fernflower.jar").withRequiredArg().ofType(File.class);
+        OptionSpec<String> decargs = parser.acceptsAll(List.of("decompilerargs", "ffargs", "a"), "SIDED - Arguments passed to the decompiler").withRequiredArg().ofType(String.class);
+        OptionSpec<File> mainfile = parser.acceptsAll(List.of("file", "s", "f"), "SIDED - The file to be modified").withRequiredArg().ofType(File.class);
+        OptionSpec<File> tempdir = parser.acceptsAll(List.of("tempdir", "t"), "The temporary directory.").withRequiredArg().ofType(File.class);
+        OptionSpec<String> java = parser.acceptsAll(List.of("jvm", "j"), "SIDED - The jvm used to execute the decompiler, default java").withRequiredArg().ofType(String.class);
+        OptionSpec<String> jvmargs = parser.acceptsAll(List.of("jvmarg", "x"), "SIDED - Args passed to the jvm").withRequiredArg().ofType(String.class);
         OptionSpec helper = parser.acceptsAll(List.of("help", "h", "?"), "Shows help").forHelp();
-        OptionSpec both = parser.acceptsAll(List.of("both", "b"), "Following modifiers affect both decompiler configurations. Default");
-        OptionSpec left = parser.acceptsAll(List.of("left", "l"), "Following modifiers affect only the source/left configuration");
-        OptionSpec right = parser.acceptsAll(List.of("right", "r"), "Following modifiers affect only the target/right configuration");
+        OptionSpec both = parser.acceptsAll(List.of("both", "b"), "Following sided modifiers affect both sides");
+        OptionSpec left = parser.acceptsAll(List.of("left", "l"), "Following sided modifiers affect only the left/source side");
+        OptionSpec right = parser.acceptsAll(List.of("right", "r"), "Following sided modifiers affect only the right/target side");
         OptionSpec parallel = parser.acceptsAll(List.of("parallel", "p"), "Run both decompilers in parallel");
-        OptionSpec skip = parser.acceptsAll(List.of("skipdecompile"), "Assume decompilation to be already done");
+        OptionSpec skip = parser.acceptsAll(List.of("skipdecompile"), "Skip decompiling, use result files already present");
         OptionSpec<String> fontname = parser.accepts("font", "The editor font").withRequiredArg().defaultsTo("Monospaced");
         List<String> latestSubargs = new ArrayList<>(args.length);
         Side side = Side.BOTH, nextside=null;
         Configuration conf = new Configuration();
         OptionSet os = parser.parse(args);
         if(os.has(helper)){
+            System.out.println("This program decompiles two jar files and allows you to compare the results.");
+            System.out.println("Example: java -jar decomparer.jar -d fernflower.jar -lf leftfile.jar -rf rightfile.jar -p");
+            System.out.println();
+            parser.formatHelpWith(new BuiltinHelpFormatter(140, 2));
             parser.printHelpOn(System.out);
             System.exit(0);
         }
